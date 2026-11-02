@@ -63,7 +63,10 @@ define(["./lib/charts"], function (charts) {
     "Google Gemini (chave do AI Studio)": "Google Gemini (AI Studio key)",
     "Anthropic Claude (chave do Console)": "Anthropic Claude (Console key)",
     "OpenRouter (vários modelos, uma chave)": "OpenRouter (many models, one key)",
-    "Modelo do Gemini": "Gemini model", "Modelo do Claude": "Claude model", "Modelo do OpenRouter": "OpenRouter model",
+    "OpenAI GPT (chave da Platform)": "OpenAI GPT (Platform key)",
+    "Modelo do Gemini": "Gemini model", "Modelo do Claude": "Claude model", "Modelo do OpenRouter": "OpenRouter model", "Modelo da OpenAI": "OpenAI model",
+    "GPT-6.1 Sol (recomendado)": "GPT-6.1 Sol (recommended)",
+    "GPT-6 Astra (melhor qualidade, mais caro)": "GPT-6 Astra (best quality, more expensive)",
     "Gemini 3.8 Flash (recomendado)": "Gemini 3.8 Flash (recommended)",
     "Gemini 4 Argon (mais inteligente, mais lento)": "Gemini 4 Argon (smarter, slower)",
     "Gemini 3.5 Flash-Lite (mais rápido e barato)": "Gemini 3.5 Flash-Lite (faster and cheaper)",
@@ -125,7 +128,7 @@ define(["./lib/charts"], function (charts) {
   var props = {
     defaults: {
       language: "pt", mode: "painel", dashboard: "", nativeObjects: "", aiProvider: "google", geminiModel: "gemini-3.8-flash", aiModel: "claude-opus-5-5",
-      openrouterModel: "google/gemini-3.8-flash",
+      openrouterModel: "google/gemini-3.8-flash", openaiModel: "gpt-6.1-sol",
       aiModelCustom: "", aiEffort: "low", aiSamples: true, aiTag: "I.A", aiContextVar: "vContexto",
       chartType: "colunas", palette: "padrao", customColors: "", target: "", topN: 10,
       showValues: true, barWidth: 0.7, lineWidth: 2.5, ringWidth: 0.38, animate: true,
@@ -163,7 +166,8 @@ define(["./lib/charts"], function (charts) {
               options: [
                 { value: "google", label: "Google Gemini (chave do AI Studio)" },
                 { value: "anthropic", label: "Anthropic Claude (chave do Console)" },
-                { value: "openrouter", label: "OpenRouter (vários modelos, uma chave)" }
+                { value: "openrouter", label: "OpenRouter (vários modelos, uma chave)" },
+                { value: "openai", label: "OpenAI GPT (chave da Platform)" }
               ]
             },
             geminiModel: {
@@ -192,6 +196,14 @@ define(["./lib/charts"], function (charts) {
                 { value: "anthropic/claude-sonnet-5.5", label: "Claude Sonnet 5.5" },
                 { value: "anthropic/claude-opus-5.5", label: "Claude Opus 5.5 (melhor qualidade)" },
                 { value: "deepseek/deepseek-v4.1-flash", label: "DeepSeek V4.1 Flash (econômico)" }
+              ]
+            },
+            openaiModel: {
+              ref: "md.openaiModel", type: "string", component: "dropdown", label: "Modelo da OpenAI", defaultValue: "gpt-6.1-sol",
+              show: function (d) { return isMode("painel")(d) && providerOf(d) === "openai"; },
+              options: [
+                { value: "gpt-6.1-sol", label: "GPT-6.1 Sol (recomendado)" },
+                { value: "gpt-6-astra", label: "GPT-6 Astra (melhor qualidade, mais caro)" }
               ]
             },
             aiModelCustom: {

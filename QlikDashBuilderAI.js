@@ -166,6 +166,27 @@ define([
     ".md-ai-ctx-sec pre { margin-bottom: 10px; max-height: 320px; overflow: auto; }",
     ".md-ai-ctx-meta { font-size: 11px; color: #64748b; }",
     ".md-ai-ctx pre { margin: 0; padding: 10px; background: #0f172a; color: #e2e8f0; border-radius: 10px; font-size: 11px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }",
+    ".md-ai-hist { position: absolute; left: 0; right: 0; bottom: 0; z-index: 30; }",
+    ".md-ai-hist-back { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: rgba(15, 23, 42, .28); }",
+    ".md-ai-hist-box { position: absolute; top: 0; left: 0; bottom: 0; width: min(330px, 86%); display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #fff; border-right: 1px solid #e2e8f0; box-shadow: 8px 0 28px rgba(15, 23, 42, .18); }",
+    ".md-ai-hist-top { display: flex; align-items: center; gap: 8px; }",
+    ".md-ai-hist-top b { color: #0f172a; font-size: 14px; }",
+    ".md-ai-hist-top span { flex: 1; color: #64748b; font-size: 11px; }",
+    ".md-ai-hist-new { padding: 8px 12px; border-radius: 10px; font-weight: 600; }",
+    ".md-ai-hist-list { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 4px; }",
+    ".md-ai-hist-item { display: flex; align-items: stretch; border: 1px solid transparent; border-radius: 10px; }",
+    ".md-ai-hist-item:hover { background: #f8fafc; border-color: #e2e8f0; }",
+    ".md-ai-hist-item.md-on { background: #eff6ff; border-color: #bfdbfe; }",
+    ".md-ai-hist-open { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border: 0; background: transparent; text-align: left; cursor: pointer; color: #334155; font: inherit; }",
+    ".md-ai-hist-open b { color: #0f172a; font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }",
+    ".md-ai-hist-open small { color: #64748b; font-size: 11px; }",
+    ".md-ai-hist-del { flex: none; width: 32px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; opacity: .45; font-size: 13px; }",
+    ".md-ai-hist-item:hover .md-ai-hist-del { opacity: 1; }",
+    ".md-ai-hist-del:hover { background: #fef2f2; }",
+    ".md-ai-hist-cur { padding: 8px 10px; border-radius: 10px; background: #f8fafc; border: 1px dashed #cbd5e1; color: #475569; font-size: 11.5px; line-height: 1.45; }",
+    ".md-ai-hist-empty { padding: 16px 6px; color: #64748b; font-size: 12px; line-height: 1.5; }",
+    ".md-ai-hist-foot { display: flex; flex-direction: column; gap: 6px; padding-top: 8px; border-top: 1px solid #eef2f7; color: #64748b; font-size: 11px; line-height: 1.45; }",
+    ".md-ai-hist-foot .md-ai-chip { align-self: flex-start; }",
     ".md-ai-log { flex: 1; min-height: 0; overflow: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }",
     ".md-ai-msg { position: relative; padding: 9px 12px; border-radius: 14px; font-size: 12.5px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; max-width: 88%; }",
     ".md-ai-user { align-self: flex-end; background: linear-gradient(135deg, #2563eb, #4f46e5); color: #fff; border-bottom-right-radius: 4px; box-shadow: 0 2px 8px rgba(37, 99, 235, .25); }",
@@ -246,7 +267,7 @@ define([
     "@keyframes md-fade { from { opacity: 0; } }"
   ].join("\n");
 
-  var VERSION = "0.21.1";
+  var VERSION = "0.24.0";
   console.info("Qlik DashBuilder AI " + VERSION + " carregado.");
 
   function scopeId(layout) {
@@ -455,6 +476,7 @@ define([
         css: function () { return state.css; },
         cfg: function () { return state.cfg; },
         getSpecJson: function () { return state.dash.key || ""; },
+        panelMissing: function () { return native.missing(qlik.currApp(), nativeMap(state)); },
         exportHtml: function (kind, win, json) { return exportStatic(state, kind, win, json); },
         buildReport: function (json) { return exportStatic(state, null, null, json); },
         // Coloca o painel na pasta, fora do assistente: objetos nativos (modo "Objetos Qlik") ou um

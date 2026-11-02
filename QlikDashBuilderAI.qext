@@ -1,11 +1,11 @@
 {
   "name": "Qlik DashBuilder AI",
-  "description": "AI assistant for Qlik Sense (Gemini, Claude or OpenRouter): chat with your data and build dashboards as native Qlik objects, Visual HTML or Complex HTML. PT-BR/EN. | Assistente de IA para o Qlik Sense: conversa com os dados e monta painéis em objetos nativos, Visual HTML ou HTML Complexo.",
+  "description": "AI assistant for Qlik Sense (Gemini, Claude, OpenAI or OpenRouter): chat with your data and build dashboards as native Qlik objects, Visual HTML or Complex HTML. PT-BR/EN. | Assistente de IA para o Qlik Sense: conversa com os dados e monta painéis em objetos nativos, Visual HTML ou HTML Complexo.",
   "type": "visualization",
-  "version": "0.21.1",
+  "version": "0.24.0",
   "author": "Danilo Stochi",
   "icon": "extension",
-  "keywords": "ai, ia, assistant, dashboard, gemini, claude, openrouter, html, xlsx",
+  "keywords": "ai, ia, assistant, dashboard, gemini, claude, openai, gpt, openrouter, html, xlsx",
   "dependencies": {
     "qlik-sense": ">=3.2.x"
   }

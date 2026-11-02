@@ -4,19 +4,22 @@
 
 Extensão de visualização para o Qlik Sense (Qlik Cloud e Client-Managed) que coloca um **assistente de IA dentro do seu app**. Você pergunta em linguagem natural e recebe a resposta com números calculados pelo motor do Qlik. O assistente também monta painéis, de três formas: objetos nativos do Qlik, um painel desenhado pela extensão ou uma página HTML autônoma para baixar.
 
-Funciona com **Google Gemini**, **Anthropic Claude** ou **OpenRouter**. Não tem backend nem bibliotecas externas: o navegador fala direto com o provedor de IA, e a chave da API fica no navegador de cada usuário.
+Funciona com **Google Gemini**, **Anthropic Claude**, **OpenAI** ou **OpenRouter**. Não tem backend nem bibliotecas externas: o navegador fala direto com o provedor de IA, e a chave da API fica no navegador de cada usuário.
 
-> Versão atual: **0.21.1** · Interface em **português** e **inglês**
+> Versão atual: **0.24.0** · Interface em **português** e **inglês**
 
 ---
 
 ## Sumário
 
+- [Novidades](#novidades)
 - [Recursos](#recursos)
 - [Como funciona](#como-funciona)
 - [Requisitos](#requisitos)
 - [Instalação](#instalação)
 - [Primeiros passos](#primeiros-passos)
+- [Como usar (passo a passo)](#como-usar-passo-a-passo)
+- [Perguntas de teste](#perguntas-de-teste)
 - [Modos do assistente](#modos-do-assistente)
 - [Preparar o app para a IA (curadoria)](#preparar-o-app-para-a-ia-curadoria)
 - [Referência das propriedades](#referência-das-propriedades)
@@ -32,9 +35,16 @@ Funciona com **Google Gemini**, **Anthropic Claude** ou **OpenRouter**. Não tem
 
 ---
 
+## Novidades
+
+- **0.24.0** — Os filtros da Conversa (períodos, filiais…) são aplicados como **seleção de verdade** numa sessão separada do app, então comparações como "09/2026 vs 09/2025" dão o valor certo de cada período com medidas governadas. Formato de período errado gera um erro claro, valores idênticos em todas as linhas são sinalizados e a IA é instruída a dizer o período de cada número e calcular a diferença.
+- **0.23.x** — **🕘 Histórico de conversas** no navegador (até 15 por app), que podem ser retomadas com todo o contexto. Painel apagado à mão é criado de novo quando você repete o pedido.
+- **0.22.0** — **OpenAI** como quarto provedor de IA.
+- **0.21.x** — Extensão bilíngue (português e inglês). Primeira versão publicada.
+
 ## Recursos
 
-- **Conversa com os dados.** A IA pede ao Qlik os números de que precisa (totais, rankings, valores por campo, séries por período). O motor calcula na hora e a IA responde em texto.
+- **Conversa com os dados.** A IA pede ao Qlik os números de que precisa (totais, rankings, valores por campo, séries por período). O motor calcula na hora e a IA responde em texto. Filtros de período ou recorte (ex.: "turnover de 09/2026 vs 09/2025") são aplicados como **seleção de verdade** numa sessão separada do app, como no HTML Complexo, então medidas governadas que leem a seleção (`$(=Max(Competência))` e afins) dão o valor certo de cada período sem mexer nas suas seleções.
 - **Copiar e Excel.** As respostas podem ser copiadas com as tabelas formatadas (cole no Excel ou no Word) ou baixadas em `.xlsx`, com uma aba por tabela.
 - **Painéis sob pedido.** Por exemplo, "analise meus dados e crie um painel executivo". O painel sai em três formatos:
   - **Objetos Qlik:** gráficos nativos na pasta, que você edita como qualquer objeto.
@@ -68,6 +78,7 @@ Funciona com **Google Gemini**, **Anthropic Claude** ou **OpenRouter**. Não tem
   - Google AI Studio: <https://aistudio.google.com/apikey>
   - Anthropic Console: <https://console.anthropic.com>
   - OpenRouter: <https://openrouter.ai/keys>
+  - OpenAI Platform: <https://platform.openai.com/api-keys>
 - **Só no Qlik Cloud:** um administrador precisa liberar o domínio do provedor na **Content Security Policy** (veja abaixo).
 
 ### Liberar a IA no Qlik Cloud (uma vez, feito por um administrador)
@@ -80,6 +91,7 @@ Funciona com **Google Gemini**, **Anthropic Claude** ou **OpenRouter**. Não tem
    | Gemini | `generativelanguage.googleapis.com` |
    | Claude | `api.anthropic.com` |
    | OpenRouter | `openrouter.ai` |
+   | OpenAI | `api.openai.com` |
 3. Marque a diretiva **connect-src** e salve.
 4. Recarregue o app com **Ctrl+F5**.
 
@@ -92,7 +104,7 @@ Se esse passo faltar, o chat mostra "Não foi possível falar com <domínio>…"
    - **Qlik Cloud:** Administração → Extensões → Adicionar.
    - **Client-Managed:** QMC → Extensions → Import.
 3. Recarregue o app com **Ctrl+F5**, porque o navegador costuma guardar a versão antiga.
-4. Abra o console do navegador (F12). Deve aparecer `Qlik DashBuilder AI 0.21.1 carregado.`
+4. Abra o console do navegador (F12). Deve aparecer `Qlik DashBuilder AI 0.24.0 carregado.`
 
 ## Primeiros passos
 
@@ -111,8 +123,53 @@ Se esse passo faltar, o chat mostra "Não foi possível falar com <domínio>…"
 
 - O assistente abre numa **janela popup do navegador**, que você pode deixar ao lado do app ou em outro monitor.
 - O botão **▣** traz o assistente para dentro da página, numa caixa flutuante que dá para arrastar e redimensionar. O botão **⧉** volta para o popup.
-- Os outros botões do cabeçalho são **ⓘ** Contexto, **↶** Desfazer, **＋** Nova conversa e **✕** Fechar. Passe o mouse sobre qualquer botão para ver o que ele faz.
+- Os outros botões do cabeçalho são **🕘** Histórico, **ⓘ** Contexto, **↶** Desfazer, **＋** Nova conversa e **✕** Fechar. Passe o mouse sobre qualquer botão para ver o que ele faz.
 - Para editar uma pergunta, passe o mouse sobre ela e clique em **✎**. Com a caixa de mensagem vazia, a tecla **↑** traz de volta a última pergunta.
+
+## Como usar (passo a passo)
+
+Uma primeira sessão típica, da pasta vazia até uma resposta conferida:
+
+1. **Prepare o app (uma vez).** Crie a variável `vContexto`, marque com a tag `I.A` os campos e itens mestre que a IA pode usar e escreva um comentário em cada campo (veja a [curadoria](#preparar-o-app-para-a-ia-curadoria)). Recarregue o app.
+2. **Adicione o objeto.** Edite uma pasta sua e não publicada, arraste o **Qlik DashBuilder AI** para ela e escolha o idioma e o provedor da IA nas propriedades.
+3. **Confira se está pronto.** Clique em **✨ IA**, cole a sua chave e abra o **ⓘ Contexto**. O selo deve mostrar ✅ *Pronto para usar*. Corrija o que estiver marcado com **!** antes de perguntar.
+4. **Escolha o modo** acima da caixa de mensagem:
+   - **💬 Conversa** para fazer perguntas e receber números.
+   - **📊 Objetos Qlik**, **🎨 Visual HTML** ou **🧩 HTML Complexo** para montar um painel.
+5. **Pergunte em linguagem natural.** Diga a medida, o período e o recorte, no formato de período do seu app (por exemplo `09/2026`, e não `9/2026`). Enquanto o motor calcula, o chat mostra cada etapa ("Calculando no Qlik…", "Abrindo uma sessão separada do app…").
+6. **Leia a resposta com atenção.** Cada número deve dizer a que período e filtro pertence. Se vier um aviso ⚠ de valores idênticos ou de filtro que não pôde ser aplicado, pergunte de novo com o valor exato do campo.
+7. **Ajuste.** Os pedidos seguintes mudam só o que você pedir ("troca a rosca por um ranking"). **↶ Desfazer** volta à versão anterior e **Refazer agora** converte o painel para o modo atual.
+8. **Exporte ou mantenha.** Na conversa, use **📋 Copiar** ou **⬇ Excel**. O HTML Complexo pode ser baixado. Os objetos nativos e o painel Visual HTML continuam na pasta mesmo se você excluir o assistente.
+9. **Volte depois.** O **＋** inicia uma nova conversa e leva a atual para o **🕘 Histórico**, de onde dá para retomá-la com todo o contexto.
+
+## Perguntas de teste
+
+Use estas perguntas para conferir se a instalação funciona de ponta a ponta. Os exemplos são de um app de RH (turnover, headcount, campo de período `Competência`). Troque a medida, o campo e os períodos pelos do seu app.
+
+### Teste principal: comparação de períodos na Conversa
+
+Modo **💬 Conversa**, sem seleções na pasta:
+
+> **"Faça um comparativo entre o turnover do mês 09/2026 vs o turnover do mês 09/2025"**
+
+Resultado esperado:
+
+- O chat mostra "Abrindo uma sessão separada do app para aplicar os filtros…" e depois "Calculando no Qlik…".
+- A resposta traz **um valor por período**, cada um com o seu período (por exemplo 3,10% em 09/2026 e 2,45% em 09/2025), e a diferença em **pontos percentuais** e em %. Os componentes (admissões, desligamentos, headcount) também mudam de um período para o outro.
+- **As suas seleções na pasta continuam iguais** quando a resposta chega.
+- Repita com uma seleção em outro campo (por exemplo uma filial). O comparativo deve respeitar essa filial e continuar mostrando dois períodos diferentes.
+
+Se os dois períodos vierem com o mesmo valor, veja [Solução de problemas](#solução-de-problemas).
+
+### Outras conferências
+
+| Modo | Pergunta | Esperado |
+|---|---|---|
+| 💬 Conversa | "Qual foi o turnover de cada mês de 2026?" | Uma linha por mês, só de 2026, calculada período a período. O **⬇ Excel** baixa a tabela. |
+| 💬 Conversa | "Compare o turnover de 9/2025 vs 9/2026" (formato errado) | A IA é avisada de que o valor não existe, tenta de novo com `09/2025` / `09/2026` ou informa o formato certo. Nunca repete o mesmo número para os dois períodos. |
+| 📊 Objetos Qlik | "Analise meus dados e crie um painel executivo" | KPIs, gráficos e um painel de filtros são criados na pasta. Apague todos à mão e repita a pergunta: o painel é criado de novo. |
+| 🧩 HTML Complexo | "Relatório de turnover de 2026, mês a mês" | Uma página com gráfico de linha ou colunas, para baixar. A mensagem de "pronto" diz que usou a sessão separada. |
+| 🕘 Histórico | Clique em **＋** e depois no **🕘** | A conversa anterior aparece na lista. Abra-a e faça uma pergunta de continuação: a IA ainda lembra das respostas anteriores. |
 
 ## Modos do assistente
 
@@ -134,7 +191,8 @@ Como a pasta é organizada:
 
 ### Conversa
 
-- As consultas seguem as **seleções atuais**. Recortes citados na pergunta ("só a filial 10002") entram como filtro da consulta, sem mudar as suas seleções.
+- As consultas seguem as **seleções atuais**. Recortes citados na pergunta ("só a filial 10002", "09/2026 vs 09/2025") são aplicados como seleção de verdade numa sessão separada do app, sem mudar as suas seleções. A opção **Habilitar nova sessão (HTML Complexo)** também vale aqui: desmarcada, o filtro é selecionado na sua própria sessão e as suas seleções voltam no fim.
+- **🕘 Histórico:** as conversas ficam salvas no navegador (`localStorage`), até 15 por app; as mais antigas saem sozinhas. A conversa atual entra na lista quando você inicia outra ou fecha o assistente (ou o navegador). Abra o 🕘 no cabeçalho para retomar uma conversa, apagar ou limpar tudo. Imagens anexadas não são guardadas.
 - Cada resposta tem **📋 Copiar** e, quando há tabelas, **⬇ Excel**. O `.xlsx` traz uma aba por tabela, com números, percentuais e moeda já formatados.
 - **O período pedido é respeitado.** Se a pergunta é sobre 2026, os períodos de outros anos são descartados, mesmo que a IA os inclua.
 
@@ -188,8 +246,8 @@ O botão **ⓘ** mostra o que o assistente sabe do app e se está pronto:
 |---|---|
 | **Idioma / Language** | `Português (Brasil)` ou `English`. Muda as propriedades, a interface, as mensagens, o formato dos números e o idioma das respostas e dos painéis da IA. Nomes de campos e valores continuam como estão no app. |
 | **Modo** | `Painel IA (assistente)` (padrão) ou `Painel (somente visualização)`, que é criado pelo próprio assistente. |
-| **Provedor da IA** | Google Gemini, Anthropic Claude ou OpenRouter. |
-| **Modelo do Gemini / Claude / OpenRouter** | Modelos recomendados de cada provedor. |
+| **Provedor da IA** | Google Gemini, Anthropic Claude, OpenRouter ou OpenAI. |
+| **Modelo do Gemini / Claude / OpenRouter / OpenAI** | Modelos recomendados de cada provedor. |
 | **Outro modelo** | Qualquer identificador de modelo do provedor, por exemplo `openai/gpt-6-sol` no OpenRouter. No OpenRouter, o modelo precisa aceitar *structured outputs*. |
 | **Profundidade da análise** | Rápida (recomendado), Equilibrada ou Detalhada. Só vale para o Claude. |
 | **Tag dos campos e itens mestres** | Padrão `I.A`. |
@@ -265,7 +323,7 @@ Antes de aplicar o filtro, a extensão confere se o campo e os valores existem. 
 - **Gemini, plano gratuito do AI Studio:**
   - **Custo e limite:** sem custo, mas com limite de pedidos. Quando o limite estoura, aparece o erro 429.
   - **Uso dos dados:** pelos termos do Google, os dados enviados no plano gratuito podem ser usados para melhorar os produtos do Google. Para dados da empresa, ative o faturamento no projeto do Google Cloud ligado à chave ou desligue os valores de exemplo.
-- **Gemini pago e Claude:** cobrança por tokens. Um pedido de painel costuma usar alguns milhares de tokens de entrada (a estrutura do app) e de 2 a 6 mil de saída. Flash-Lite, Sonnet e Haiku são mais baratos.
+- **Gemini pago, Claude e OpenAI:** cobrança por tokens. Um pedido de painel costuma usar alguns milhares de tokens de entrada (a estrutura do app) e de 2 a 6 mil de saída. Flash-Lite, Sonnet e Haiku são mais baratos.
 - **OpenRouter:**
   - **Créditos:** são pré-pagos. Quando acabam, aparece o erro 402.
   - **Modelos gratuitos:** os terminados em `:free` não custam nada, mas têm limites baixos e podem guardar os dados.
@@ -284,6 +342,7 @@ Antes de aplicar o filtro, a extensão confere se o campo e os valores existem. 
 | Versão antiga continua aparecendo | Envie o zip de novo e recarregue com **Ctrl+F5**. |
 | Objetos não são criados na pasta | A pasta precisa ser sua e não publicada. |
 | HTML Complexo segue as suas seleções | A sessão separada não abriu. A mensagem "pronto" diz qual caminho foi usado. |
+| Um comparativo na Conversa mostra o mesmo valor em todos os períodos | Confira se está na versão 0.24.0 ou superior (console, F12). Use o valor exato do período no campo (`09/2025`, e não `9/2025`). Se a resposta avisar que o filtro foi calculado com set analysis, nem a sessão separada nem o favorito temporário estavam disponíveis. |
 
 ## Estrutura do projeto
 
@@ -294,7 +353,8 @@ QlikDashBuilderAI/
 ├── properties.js             painel de propriedades (bilíngue) e valores padrão
 └── lib/
     ├── assistant.js          chat, modos, prompts, tela de Contexto, copiar/Excel
-    ├── ai.js                 clientes Gemini / Claude / OpenRouter (saída estruturada)
+    ├── history.js            histórico de conversas no navegador (até 15 por app)
+    ├── ai.js                 clientes Gemini / Claude / OpenRouter / OpenAI (saída estruturada)
     ├── appinfo.js            lê estrutura do app, tags, itens mestres, vContexto
     ├── query.js              executa no motor do Qlik as consultas pedidas pela IA
     ├── extract.js            extração período a período (sessão, favorito, set analysis)

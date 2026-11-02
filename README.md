@@ -4,19 +4,22 @@
 
 A Qlik Sense visualization extension (Qlik Cloud and Client-Managed) that adds an **AI assistant inside your app**. Ask in plain language and it answers with numbers calculated by the Qlik engine. It can also build dashboards, either as native Qlik objects, as a panel drawn by the extension, or as a standalone HTML page you can download.
 
-It works with **Google Gemini**, **Anthropic Claude** or **OpenRouter**. It has no backend and no external libraries: the browser talks directly to the AI provider, and the API key stays in the user's browser.
+It works with **Google Gemini**, **Anthropic Claude**, **OpenAI** or **OpenRouter**. It has no backend and no external libraries: the browser talks directly to the AI provider, and the API key stays in the user's browser.
 
-> Current version: **0.21.1** · UI in **English** and **Brazilian Portuguese**
+> Current version: **0.24.0** · UI in **English** and **Brazilian Portuguese**
 
 ---
 
 ## Contents
 
+- [What's new](#whats-new)
 - [Features](#features)
 - [How it works](#how-it-works)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Getting started](#getting-started)
+- [How to use (step by step)](#how-to-use-step-by-step)
+- [Test questions](#test-questions)
 - [Assistant modes](#assistant-modes)
 - [Preparing your app for the AI (curation)](#preparing-your-app-for-the-ai-curation)
 - [Properties reference](#properties-reference)
@@ -32,9 +35,16 @@ It works with **Google Gemini**, **Anthropic Claude** or **OpenRouter**. It has 
 
 ---
 
+## What's new
+
+- **0.24.0** — Chat filters (periods, branches…) are applied as **real selections** in a separate app session, so comparisons such as "09/2026 vs 09/2025" return the right value for each period with governed measures. Wrong period formats give a clear error, identical values across rows are flagged, and the AI is instructed to label every number with its period and compute the difference.
+- **0.23.x** — **🕘 Chat history** in the browser (up to 15 per app), resumable with full context. A dashboard deleted by hand is recreated when you ask again.
+- **0.22.0** — **OpenAI** as a fourth AI provider.
+- **0.21.x** — Bilingual extension (English and Portuguese). First public release.
+
 ## Features
 
-- **Chat with your data.** The AI asks Qlik for the numbers it needs (totals, rankings, values by field, series by period), the engine calculates them on the spot, and the AI answers in text.
+- **Chat with your data.** The AI asks Qlik for the numbers it needs (totals, rankings, values by field, series by period), the engine calculates them on the spot, and the AI answers in text. Period or slice filters (e.g. "turnover 09/2026 vs 09/2025") are applied as **real selections** in a separate app session, like Complex HTML, so governed measures that read the selection (`$(=Max(Competência))` and the like) return the right value for each period without touching your selections.
 - **Copy and Excel.** Answers can be copied with formatted tables (paste into Excel or Word) or downloaded as `.xlsx`, one sheet per table.
 - **Dashboards on request.** For example, "analyze my data and build an executive dashboard". There are three output formats:
   - **Qlik Objects:** native charts placed on the sheet. You can edit them like any other object.
@@ -68,6 +78,7 @@ It works with **Google Gemini**, **Anthropic Claude** or **OpenRouter**. It has 
   - Google AI Studio: <https://aistudio.google.com/apikey>
   - Anthropic Console: <https://console.anthropic.com>
   - OpenRouter: <https://openrouter.ai/keys>
+  - OpenAI Platform: <https://platform.openai.com/api-keys>
 - **Qlik Cloud only:** an administrator must allow the provider's domain in the **Content Security Policy** (see below).
 
 ### Allow the AI in Qlik Cloud (once, by an admin)
@@ -80,6 +91,7 @@ It works with **Google Gemini**, **Anthropic Claude** or **OpenRouter**. It has 
    | Gemini | `generativelanguage.googleapis.com` |
    | Claude | `api.anthropic.com` |
    | OpenRouter | `openrouter.ai` |
+   | OpenAI | `api.openai.com` |
 3. Tick the **connect-src** directive and save.
 4. Reload the app with **Ctrl+F5**.
 
@@ -92,7 +104,7 @@ If this step is missing, the chat shows "Could not reach <domain>…".
    - **Qlik Cloud:** Administration → Extensions → Add.
    - **Client-Managed:** QMC → Extensions → Import.
 3. Reload the app with **Ctrl+F5**. Browsers tend to cache the old version.
-4. Open the browser console (F12). You should see `Qlik DashBuilder AI 0.21.1 carregado.`
+4. Open the browser console (F12). You should see `Qlik DashBuilder AI 0.24.0 carregado.`
 
 ## Getting started
 
@@ -111,8 +123,53 @@ If this step is missing, the chat shows "Could not reach <domain>…".
 
 - The assistant opens in a **browser popup window**. You can move it beside the app or to another monitor.
 - **▣** docks it as a floating box inside the page, which you can drag and resize. **⧉** switches back to the popup.
-- Other header buttons: **ⓘ** Context, **↶** Undo, **＋** New chat and **✕** Close. Hover any button to see what it does.
+- Other header buttons: **🕘** History, **ⓘ** Context, **↶** Undo, **＋** New chat and **✕** Close. Hover any button to see what it does.
 - To edit a question, hover it and click **✎**. With an empty message box, press **↑** to recall your last question.
+
+## How to use (step by step)
+
+A typical first session, from an empty sheet to a validated answer:
+
+1. **Prepare the app (once).** Create the `vContexto` variable, tag the fields and master items the AI may use with `I.A` and write a comment on each field (see [curation](#preparing-your-app-for-the-ai-curation)). Reload the app.
+2. **Add the object.** Edit a sheet that is yours and unpublished, drag **Qlik DashBuilder AI** onto it and choose the language and the AI provider in the properties.
+3. **Check readiness.** Click **✨ AI**, paste your API key and open **ⓘ Context**. The badge should say ✅ *Ready to use*. Fix any item marked **!** before asking.
+4. **Pick a mode** above the message box:
+   - **💬 Chat** to ask questions and get numbers.
+   - **📊 Qlik Objects**, **🎨 Visual HTML** or **🧩 Complex HTML** to build a dashboard.
+5. **Ask in plain language.** Name the measure, the period and the slice, using the period format of your app (for example `09/2026`, not `9/2026`). While the engine calculates, the chat shows each step ("Calculating in Qlik…", "Opening a separate app session…").
+6. **Read the answer critically.** Each number should say which period and filter it belongs to. If the answer carries a ⚠ warning about identical values or a filter that could not be applied, ask again with the exact field value.
+7. **Refine.** Follow-up requests change only what you ask for ("replace the donut with a ranking"). **↶ Undo** brings back the previous version, and **Redo now** converts the panel to the current mode.
+8. **Export or keep.** In chat, use **📋 Copy** or **⬇ Excel**. Complex HTML can be downloaded. Native objects and the Visual HTML panel stay on the sheet even if you delete the assistant.
+9. **Come back later.** **＋** starts a new chat and moves the current one to **🕘 History**, where you can resume it with its full context.
+
+## Test questions
+
+Use these questions to confirm the installation works end to end. The examples come from an HR app (turnover, headcount, `Competência` period field). Replace the measure, field and periods with ones from your app.
+
+### Main test: period comparison in Chat
+
+Mode **💬 Chat**, with no selections on the sheet:
+
+> **"Compare the turnover for 09/2026 vs the turnover for 09/2025"**
+
+Expected result:
+
+- The chat shows "Opening a separate app session to apply the filters…" and then "Calculating in Qlik…".
+- The answer gives **one value per period**, each labeled with its period (for example 3.10% in 09/2026 and 2.45% in 09/2025), plus the difference in **percentage points** and in %. The components (hires, terminations, headcount) also differ between periods.
+- **Your selections on the sheet are unchanged** when the answer arrives.
+- Repeat with a selection on another field (for example one branch). The comparison should respect that branch and still show two different periods.
+
+If both periods show the same value, see [Troubleshooting](#troubleshooting).
+
+### Other checks
+
+| Mode | Question | Expected |
+|---|---|---|
+| 💬 Chat | "What was the turnover for each month of 2026?" | One row per month of 2026 only, calculated period by period. **⬇ Excel** downloads the table. |
+| 💬 Chat | "Compare the turnover for 9/2025 vs 9/2026" (wrong format) | The AI is told the value does not exist, retries with `09/2025` / `09/2026` or tells you the correct format. It never repeats one number for both periods. |
+| 📊 Qlik Objects | "Analyze my data and create an executive dashboard" | KPIs, charts and a filter pane are created on the sheet. Delete all of them by hand and ask the same question again: the dashboard is recreated. |
+| 🧩 Complex HTML | "Turnover report for 2026, month by month" | A page with a line or column chart, downloadable. The "ready" message says it used the separate session. |
+| 🕘 History | Click **＋**, then **🕘** | The previous chat is listed. Open it and ask a follow-up: the AI still remembers the earlier answers. |
 
 ## Assistant modes
 
@@ -134,7 +191,8 @@ How the sheet is managed:
 
 ### Chat
 
-- Queries follow the **current selections**. Filters mentioned in the question ("only branch 10002") are applied to the query without changing your selections.
+- Queries follow the **current selections**. Filters mentioned in the question ("only branch 10002", "09/2026 vs 09/2025") are applied as real selections in a separate app session, without changing your selections. The option **Enable new session (Complex HTML)** also controls this: when it is unchecked, the filter is selected in your own session and your selections are restored at the end.
+- **🕘 History:** chats are saved in the browser (`localStorage`), up to 15 per app; the oldest are dropped automatically. The current chat joins the list when you start another one or close the assistant (or the browser). Open 🕘 in the header to resume, delete or clear chats. Attached images are not stored.
 - Every answer has **📋 Copy** and, when there are tables, **⬇ Excel**. The `.xlsx` has one sheet per table, with real numbers, percentages and currency formats.
 - **Requested periods are enforced.** If you ask about 2026, periods from other years are dropped even if the AI includes them.
 
@@ -188,8 +246,8 @@ The **ⓘ** button shows what the assistant knows and whether it is ready:
 |---|---|
 | **Idioma / Language** | `Português (Brasil)` or `English`. Changes the properties, the UI, messages, number formats and the language of AI answers and generated panels. Field names and data values stay as they are in the app. |
 | **Mode** | `AI Panel (assistant)` (default) or `Panel (view only)`. The assistant creates the view-only panel itself. |
-| **AI provider** | Google Gemini, Anthropic Claude or OpenRouter. |
-| **Gemini / Claude / OpenRouter model** | Recommended models per provider. |
+| **AI provider** | Google Gemini, Anthropic Claude, OpenRouter or OpenAI. |
+| **Gemini / Claude / OpenRouter / OpenAI model** | Recommended models per provider. |
 | **Other model** | Any model id from the provider, e.g. `openai/gpt-6-sol` on OpenRouter. With OpenRouter, the model must support structured outputs. |
 | **Analysis depth** | Fast (recommended), Balanced or Detailed. Applies to Claude only. |
 | **Tag of the fields and master items** | Default `I.A`. |
@@ -265,7 +323,7 @@ Before a filter is applied, the extension checks that the field and its values e
 - **Gemini free tier (AI Studio):**
   - **Cost and limits:** no cost, but rate-limited. Hitting the limit returns error 429.
   - **Privacy:** under Google's terms, data sent on the free tier may be used to improve Google products. For company data, enable billing on the Google Cloud project behind the key, or turn off sample values.
-- **Paid Gemini and Claude:** billed per token. A dashboard request typically uses a few thousand input tokens (the app structure) and 2–6k output tokens. Flash-Lite, Sonnet and Haiku are cheaper.
+- **Paid Gemini, Claude and OpenAI:** billed per token. A dashboard request typically uses a few thousand input tokens (the app structure) and 2–6k output tokens. Flash-Lite, Sonnet and Haiku are cheaper.
 - **OpenRouter:**
   - **Credits:** prepaid. Running out returns error 402.
   - **Free models:** models ending in `:free` cost nothing but are heavily limited and may retain data.
@@ -284,6 +342,7 @@ Before a filter is applied, the extension checks that the field and its values e
 | Old version still showing | Re-upload the zip and reload with **Ctrl+F5**. |
 | Objects are not created on the sheet | The sheet must be yours and unpublished. |
 | Complex HTML follows your selections | The separate session could not open. The "ready" message tells you which path was used. |
+| A chat comparison shows the same value for every period | Make sure you are on version 0.24.0 or later (console, F12). Use the exact period value of the field (`09/2025`, not `9/2025`). If the answer warns that the filter was calculated with set analysis, the separate session and the temporary bookmark were both unavailable. |
 
 ## Project structure
 
@@ -294,7 +353,8 @@ QlikDashBuilderAI/
 ├── properties.js             property panel (bilingual) and defaults
 └── lib/
     ├── assistant.js          chat UI, modes, prompts, Context screen, copy/Excel
-    ├── ai.js                 Gemini / Claude / OpenRouter clients (structured output)
+    ├── history.js            chat history in the browser (up to 15 per app)
+    ├── ai.js                 Gemini / Claude / OpenRouter / OpenAI clients (structured output)
     ├── appinfo.js            reads app structure, tags, master items, vContexto
     ├── query.js              runs the AI's queries on the Qlik engine
     ├── extract.js            period-by-period extraction (session, bookmark, set analysis)
