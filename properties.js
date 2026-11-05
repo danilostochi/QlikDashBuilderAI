@@ -24,7 +24,7 @@ define(["./lib/charts"], function (charts) {
   var DEFAULT_CSS = [
     ".painel { padding: 12px; display: flex; flex-direction: column; gap: 12px; }",
     ".topo { display: flex; gap: 12px; align-items: stretch; flex-wrap: wrap; }",
-    ".kpi { flex: 1; min-width: 140px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: #fff; border-radius: 12px; padding: 12px 16px; }",
+    ".kpi { flex: 1; min-width: 140px; background: #1a73e8; color: #fff; border-radius: 12px; padding: 12px 16px; }",
     ".kpi span { font-size: 12px; opacity: .85; display: block; }",
     ".kpi strong { font-size: 26px; }",
     ".topo button { border: 1px solid #cbd5e1; background: #fff; border-radius: 8px; padding: 0 14px; cursor: pointer; }",
@@ -35,7 +35,7 @@ define(["./lib/charts"], function (charts) {
     ".nome { font-size: 12px; color: #64748b; }",
     ".valor { font-size: 22px; font-weight: 600; margin: 4px 0 8px; color: #0f172a; }",
     ".barra { height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden; }",
-    ".barra span { display: block; height: 100%; background: #2563eb; border-radius: 3px; }"
+    ".barra span { display: block; height: 100%; background: #1a73e8; border-radius: 3px; }"
   ].join("\n");
 
   var CHART_OPTIONS = Object.keys(charts.TYPES).map(function (k) {

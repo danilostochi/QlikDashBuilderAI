@@ -6,7 +6,7 @@ A Qlik Sense visualization extension (Qlik Cloud and Client-Managed) that adds a
 
 It works with **Google Gemini**, **Anthropic Claude**, **OpenAI** or **OpenRouter**. It has no backend and no external libraries: the browser talks directly to the AI provider, and the API key stays in the user's browser.
 
-> Current version: **0.24.0** · UI in **English** and **Brazilian Portuguese**
+> Current version: **0.32.0** · UI in **English** and **Brazilian Portuguese**
 
 ---
 
@@ -37,6 +37,11 @@ It works with **Google Gemini**, **Anthropic Claude**, **OpenAI** or **OpenRoute
 
 ## What's new
 
+- **0.32.0** — **Mobile selection bar**, like Qlik's: one chip per selected field (including selections made on charts); ✕ on a chip clears the field, tapping a chip opens its list to change the values, and the overall ✕ clears everything.
+- **0.31.0** — **Lock on every tile** (🔒/🔓): locked, tapping or clicking only shows the values; unlocked, clicking filters and **dragging selects a range**. On touch devices tiles start locked.
+- **0.29.0** — On mobile, the side filters become a **collapsible drawer** with a sticky "☰ Filters" button.
+- **0.28.0** — *Storytelling with Data* principles: actual vs target on a **single axis**, with the target as a mark and bars below target highlighted; no secondary axis; current month flagged as partial; the AI now writes action titles and picks the chart by the data relationship.
+- **0.25.0 to 0.27.1** — Qlik-style look with a blue accent (Source Sans font) and colors by measure meaning (target in grey, previous year in light blue, cost in orange).
 - **0.24.0** — Chat filters (periods, branches…) are applied as **real selections** in a separate app session, so comparisons such as "09/2026 vs 09/2025" return the right value for each period with governed measures. Wrong period formats give a clear error, identical values across rows are flagged, and the AI is instructed to label every number with its period and compute the difference.
 - **0.23.x** — **🕘 Chat history** in the browser (up to 15 per app), resumable with full context. A dashboard deleted by hand is recreated when you ask again.
 - **0.22.0** — **OpenAI** as a fourth AI provider.
@@ -104,7 +109,7 @@ If this step is missing, the chat shows "Could not reach <domain>…".
    - **Qlik Cloud:** Administration → Extensions → Add.
    - **Client-Managed:** QMC → Extensions → Import.
 3. Reload the app with **Ctrl+F5**. Browsers tend to cache the old version.
-4. Open the browser console (F12). You should see `Qlik DashBuilder AI 0.24.0 carregado.`
+4. Open the browser console (F12). You should see `Qlik DashBuilder AI 0.32.0 carregado.`
 
 ## Getting started
 

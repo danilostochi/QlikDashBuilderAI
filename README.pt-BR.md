@@ -6,7 +6,7 @@ Extensão de visualização para o Qlik Sense (Qlik Cloud e Client-Managed) que 
 
 Funciona com **Google Gemini**, **Anthropic Claude**, **OpenAI** ou **OpenRouter**. Não tem backend nem bibliotecas externas: o navegador fala direto com o provedor de IA, e a chave da API fica no navegador de cada usuário.
 
-> Versão atual: **0.24.0** · Interface em **português** e **inglês**
+> Versão atual: **0.32.0** · Interface em **português** e **inglês**
 
 ---
 
@@ -37,6 +37,11 @@ Funciona com **Google Gemini**, **Anthropic Claude**, **OpenAI** ou **OpenRouter
 
 ## Novidades
 
+- **0.32.0** — **Barra de seleções no celular**, como a do Qlik: um chip por campo selecionado (inclusive filtros feitos nos gráficos), ✕ no chip limpa o campo, tocar no chip abre a lista para trocar os valores e o ✕ total limpa tudo.
+- **0.31.0** — **Cadeado em cada bloco** (🔒/🔓): travado, tocar ou clicar só mostra os valores; aberto, clicar filtra e **arrastar seleciona um intervalo** (efeito deslizante). No celular os blocos começam travados.
+- **0.29.0** — No celular, os filtros laterais viram uma **gaveta retrátil** com botão "☰ Filtros" fixo no topo.
+- **0.28.0** — Princípios de *Storytelling with Data*: realizado x meta num **eixo único**, com a meta como marca e as barras abaixo da meta em destaque; sem eixo secundário; mês corrente marcado como parcial; a IA passa a usar títulos de ação e escolher o gráfico pela relação dos dados.
+- **0.25.0 a 0.27.1** — Visual no estilo Qlik com azul de destaque (fonte Source Sans) e cores pelo significado da medida (meta em cinza, ano anterior em azul claro, custo em laranja).
 - **0.24.0** — Os filtros da Conversa (períodos, filiais…) são aplicados como **seleção de verdade** numa sessão separada do app, então comparações como "09/2026 vs 09/2025" dão o valor certo de cada período com medidas governadas. Formato de período errado gera um erro claro, valores idênticos em todas as linhas são sinalizados e a IA é instruída a dizer o período de cada número e calcular a diferença.
 - **0.23.x** — **🕘 Histórico de conversas** no navegador (até 15 por app), que podem ser retomadas com todo o contexto. Painel apagado à mão é criado de novo quando você repete o pedido.
 - **0.22.0** — **OpenAI** como quarto provedor de IA.
@@ -104,7 +109,7 @@ Se esse passo faltar, o chat mostra "Não foi possível falar com <domínio>…"
    - **Qlik Cloud:** Administração → Extensões → Adicionar.
    - **Client-Managed:** QMC → Extensions → Import.
 3. Recarregue o app com **Ctrl+F5**, porque o navegador costuma guardar a versão antiga.
-4. Abra o console do navegador (F12). Deve aparecer `Qlik DashBuilder AI 0.24.0 carregado.`
+4. Abra o console do navegador (F12). Deve aparecer `Qlik DashBuilder AI 0.32.0 carregado.`
 
 ## Primeiros passos
 
