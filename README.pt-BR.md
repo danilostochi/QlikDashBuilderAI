@@ -12,6 +12,7 @@ Funciona com **Google Gemini**, **Anthropic Claude**, **OpenAI** ou **OpenRouter
 
 ## Sumário
 
+- [Capturas de tela](#capturas-de-tela)
 - [Novidades](#novidades)
 - [Recursos](#recursos)
 - [Como funciona](#como-funciona)
@@ -32,6 +33,37 @@ Funciona com **Google Gemini**, **Anthropic Claude**, **OpenAI** ou **OpenRouter
 - [Gerar o zip](#gerar-o-zip)
 - [Modos antigos](#modos-antigos)
 - [Licença](#licença)
+
+---
+
+## Capturas de tela
+
+> Imagens geradas no ambiente de teste da extensão, com **dados fictícios**.
+
+### Desktop
+
+**Painel gerado pelo assistente**: KPIs, realizado x meta (meta como marca, meses abaixo da meta em laranja), rankings com títulos de ação e filtros à esquerda.
+
+<img src="docs/screenshots/desktop-painel.jpg" alt="Painel executivo gerado pela IA no desktop">
+
+**Assistente no modo Visual HTML**, montando o painel a partir de um pedido em linguagem natural:
+
+<img src="docs/screenshots/desktop-assistente-painel.jpg" alt="Assistente criando o painel">
+
+**Assistente no modo Conversa**: consulta os números no Qlik e responde com tabela, copiar e Excel:
+
+<img src="docs/screenshots/desktop-assistente-conversa.jpg" alt="Assistente respondendo no modo Conversa">
+
+### Celular
+
+| Barra de seleções | Gaveta de filtros | Lista de um campo |
+|:---:|:---:|:---:|
+| <img src="docs/screenshots/mobile-barra-selecoes.png" alt="Barra de seleções no celular" width="240"> | <img src="docs/screenshots/mobile-gaveta-filtros.png" alt="Gaveta de filtros no celular" width="240"> | <img src="docs/screenshots/mobile-lista-campo.png" alt="Lista do campo para trocar os valores" width="240"> |
+| Chips com ✕ por campo e ✕ total | ☰ Filtros abre a gaveta sobre o painel | Tocar no chip abre a lista do campo |
+
+| Cadeado fechado: tocar só mostra os valores | Cadeado aberto: arrastar seleciona o intervalo |
+|:---:|:---:|
+| <img src="docs/screenshots/mobile-cadeado-valores.png" alt="Cartão de valores com o bloco travado" width="240"> | <img src="docs/screenshots/mobile-selecao-deslizante.png" alt="Seleção deslizante no ranking" width="240"> |
 
 ---
 
